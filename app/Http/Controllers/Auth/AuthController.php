@@ -40,7 +40,7 @@ class AuthController extends Controller
         }
 
         if (!$token = auth()->attempt($validator->validated())) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => 'Invalid login credentials'], 401);
         }
 
         return $this->createNewToken($token);
@@ -99,7 +99,9 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function userProfile() {
-        return new UserResources(auth()->user());
+        $user = auth()->user();
+        dd($user->roles);
+//        return new UserResources($user);
     }
 
     public function passwordReset(Request $request){

@@ -2,6 +2,8 @@
 
 namespace App;
 
+//use Spatie\Permission\Traits\HasPermissions;
+use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -9,15 +11,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use Notifiable;
+    use Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['email','role_id','password_token', 'password',
-    ];
+    protected $fillable = ['email','role_id','password_token', 'password',];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -25,7 +26,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token','pivot','password_token'
     ];
 
     /**
@@ -59,11 +60,46 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->belongsTo(Role::class,'role_id');
     }
-    
+
 
     public function employer()
     {
         return $this->hasMany(Employer::class);
+    }
+
+    public function employee()
+    {
+        return $this->hasMany(Employee::class);
+    }
+
+    public function itf()
+    {
+        return $this->hasMany(ExternalSupervisor::class);
+    }
+
+    public function institution()
+    {
+        return $this->hasMany(Institution::class);
+    }
+
+    public function siwes_cordinator()
+    {
+        return $this->hasMany(SiwesCordinator::class);
+    }
+
+    public function siwes_supervisor()
+    {
+        return $this->hasMany(SiwesSupervisor::class);
+    }
+
+    public function student()
+    {
+        return $this->hasMany(Student::class);
+    }
+
+    public function user_permission()
+    {
+        return $this->belongsToMany(Permission::class);
     }
     public function training()
     {
@@ -77,4 +113,5 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Module::class);
     }
+
 }

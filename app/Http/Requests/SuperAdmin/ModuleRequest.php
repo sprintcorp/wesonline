@@ -24,9 +24,10 @@ class ModuleRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string',
-            'description' => 'string', 
-            'module' => 'required|max:100000|mimes:mp4,avi,mkv',          
+            'name' => 'string',
+            'section_id' => 'exists:section,id',
+            'description' => 'string',
+            'module' => 'max:100000|mimes:mp4,avi,mkv',
         ];
     }
 }

@@ -16,4 +16,8 @@ class Section extends Model
     {
         return $this->belongsTo(User::class,'user_id');
     }
+    public function module()
+    {
+        return $this->hasMany(Module::class);
+    }
 }

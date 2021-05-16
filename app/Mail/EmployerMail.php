@@ -29,6 +29,6 @@ class EmployerMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.super_admin_create_employer')->subject('Account registration');
+        return $this->markdown('emails.super_admin.super_admin_create_employer')->subject('Account registration');
     }
 }

@@ -26,6 +26,7 @@ class SectionRequest extends FormRequest
         return [
             'description' => 'string',
             'name' => 'required|string',
+//            'training_id' => 'required|exists:training,id',
         ];
     }
 }

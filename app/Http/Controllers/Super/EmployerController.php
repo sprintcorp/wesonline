@@ -21,6 +21,7 @@ class EmployerController extends Controller
 
     public function __construct() {
         $this->middleware('auth:api');
+        $this->middleware('role:System');
     }
     /**
      * Display a listing of the resource.
@@ -62,8 +63,8 @@ class EmployerController extends Controller
         $response = Employer::create($data);
         Mail::to($user->email)->send(new EmployerMail($user));
         return $this->successResponse($response,201);
-        
-        
+
+
     }
 
     /**
@@ -86,7 +87,7 @@ class EmployerController extends Controller
      */
     public function edit($id)
     {
-        
+
 
     }
 

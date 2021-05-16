@@ -20,10 +20,11 @@ class TrainingResource extends JsonResource
             'creator' => $this->user_type ? 'admin' : $this->user->employer->name,
             'name'=> $this->name,
             'description'=> $this->description,
-            'section' => $this->section,
-            'no_of_section'=> count($this->section),
-            'created_at'=> $this->created_at,
+            'training' => $this->training,
+            'no_of_section'=> $this->section ? count($this->section) : 0,
+            'section'=> $this->section,
             'updated_at'=> $this->updated_at,
+            'created_at'=> $this->created_at,
         ];
     }
 }

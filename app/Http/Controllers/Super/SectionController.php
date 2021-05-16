@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Super;
 
+use App\Http\Resources\SectionResource;
 use App\Section;
 use App\Training;
 use App\Traits\ApiResponser;
@@ -9,7 +10,9 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SuperAdmin\SectionRequest;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class SectionController extends Controller
 {
@@ -25,18 +28,9 @@ class SectionController extends Controller
      */
     public function index()
     {
-        //
+//        $training = Training::where('slug',$_GET['slug'])->latest()->get();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -68,30 +62,34 @@ class SectionController extends Controller
      */
     public function show($id)
     {
-        //
+        $section = Section::where('slug',$id)->first();
+        if($section){
+            return new SectionResource($section);
+        }else{
+            throw new RouteNotFoundException('Section not found',404);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param SectionRequest $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(SectionRequest $request, $id)
     {
-        //
+        $section = Section::findorFail($id);
+        $data = $request->all();
+        if($section->user_id == auth()->user()->id){
+            $data['slug'] = Str::slug($request->name).'-'.md5(uniqid(rand(), true));
+            $section->update($data);
+            return $this->showMessage("Section updated successfully",200);
+        }else{
+            throw new HttpException(422,'The user is not the creator of this section');
+        }
+
     }
 
     /**
@@ -102,6 +100,7 @@ class SectionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Section::findorFail($id)->delete();
+        return $this->showMessage("Section successfully deleted");
     }
 }
